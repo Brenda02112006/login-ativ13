@@ -11,13 +11,18 @@
             padding: 20px; 
             margin-top: 50px; 
         }
+        .custom-bg {
+        background-color: #484488; /* Cor de fundo roxo */
+    }
     </style>
+
+
 </head>
-<body class="bg-info">
+<body class="custom-bg">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6 form-wrapper bg-light"> 
-                <h2 class="text-center">Registrar</h2>
+                <h2 class="text-center"> Cadastro: </h2>
                 <% if(errorMessage) { %>
                     <p class="text-danger"><%= errorMessage %></p>
                 <% } %>
