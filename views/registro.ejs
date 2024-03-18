@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-wrapper {
+            border: 1px solid #ced4da; 
+            padding: 20px; 
+            margin-top: 50px; 
+        }
+    </style>
+</head>
+<body class="bg-info">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 form-wrapper bg-light"> 
+                <h2 class="text-center">Registrar</h2>
+                <% if(errorMessage) { %>
+                    <p class="text-danger"><%= errorMessage %></p>
+                <% } %>
+                <form action="/register" method="POST">
+                    <div class="form-group">
+                        <label for="name">Nome:</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Senha:</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirme a senha:</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Registrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
