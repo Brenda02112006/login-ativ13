@@ -1,3 +1,6 @@
+// Importando o módulo path
+const path = require('path');
+
 // Importando as bibliotecas necessárias
 const express = require('express'); // Importa o framework Express
 const bodyParser = require('body-parser'); // Middleware para fazer parsing do corpo das requisições
@@ -8,6 +11,7 @@ const app = express();
 
 // Configurando o mecanismo de visualização para EJS
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views')); // Define o diretório de visualizações
 
 // Utilizando o middleware bodyParser para analisar o corpo das solicitações
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -50,7 +54,15 @@ app.get('/usuarios', verificarAutenticacao, (req, res) => {
 
 // Rota para excluir um usuário (requer autenticação)
 app.post('/excluir/:email', verificarAutenticacao, (req, res) => {
-    // Lógica para excluir usuário
+    const email = req.params.email;
+    // Encontra o índice do usuário com o email fornecido na lista de usuários
+    const index = users.findIndex(user => user.email === email);
+    if (index !== -1) {
+        // Remove o usuário da lista de usuários
+        users.splice(index, 1);
+    }
+    // Redireciona para a lista de usuários após a exclusão
+    res.redirect('/usuarios');
 });
 
 // Rota para a página de registro
