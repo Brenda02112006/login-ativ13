@@ -1,19 +1,14 @@
-// Importando o módulo path
 const path = require('path');
 
-// Importando as bibliotecas necessárias
-const express = require('express'); // Importa o framework Express
-const bodyParser = require('body-parser'); // Middleware para fazer parsing do corpo das requisições
-const session = require('express-session'); // Middleware para gerenciar sessões de usuário
+const express = require('express'); 
+const bodyParser = require('body-parser'); 
+const session = require('express-session'); 
 
-// Inicializando o aplicativo Express
 const app = express();
 
-// Configurando o mecanismo de visualização para EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); // Define o diretório de visualizações
 
-// Utilizando o middleware bodyParser para analisar o corpo das solicitações
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configurando o middleware de sessão
@@ -23,7 +18,6 @@ app.use(session({
     saveUninitialized: true // Salva a sessão mesmo que ela não tenha sido inicializada
 }));
 
-// Lista de usuários cadastrados (simulada)
 let users = [];
 
 // Middleware para verificar autenticação do usuário
