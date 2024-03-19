@@ -71,25 +71,18 @@ app.post('/excluir/:email', verificarAutenticacao, (req, res) => {
 
 // Rota para a página de registro
 app.get('/register', (req, res) => {
-    // Renderiza a página de registro, passando uma mensagem de erro vazia como dados
     res.render('registro', { errorMessage: '' });
 });
 
-// Rota para registrar um novo usuário
 app.post('/register', (req, res) => {
-    // Extrai os dados do corpo da requisição
     const { name, email, password, confirmPassword } = req.body;
     
-    // Verifica se as senhas coincidem
     if (password !== confirmPassword) {
-        // Se as senhas não coincidirem, renderiza a página de registro com uma mensagem de erro
         return res.render('registro', { errorMessage: 'As senhas não coincidem' });
     }
 
-    // Verifica se o email já está cadastrado
     const existingUser = users.find(user => user.email === email);
     if (existingUser) {
-        // Se o email já estiver cadastrado, renderiza a página de registro com uma mensagem de erro
         return res.render('registro', { errorMessage: 'Este email já está cadastrado' });
     }
 
@@ -97,9 +90,7 @@ app.post('/register', (req, res) => {
     const newUser = { name, email, password };
     // Adiciona o novo usuário à lista de usuários
     users.push(newUser);
-    // Cria uma sessão para o usuário registrado
     req.session.usuario = newUser;
-    // Redireciona para a página de perfil do novo usuário
     res.redirect(`/perfil/${newUser.email}`);
 });
 
@@ -113,9 +104,7 @@ app.get('/', (req, res) => {
 app.post('/login', (req, res) => {
     // Extrai os dados do corpo da requisição
     const { email, password } = req.body;
-    // Procura um usuário com o email e senha fornecidos
     const user = users.find(user => user.email === email && user.password === password);
-    // Se encontrar um usuário, cria uma sessão para ele e redireciona para sua página de perfil
     if (user) {
         req.session.usuario = user;
         res.redirect(`/perfil/${user.email}`);
