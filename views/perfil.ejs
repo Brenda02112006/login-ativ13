@@ -7,14 +7,14 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            background-color:#484488 ;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #e5dbff; /* Mudança para roxo claro */
+            background-color: #bda9ec; 
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
@@ -57,13 +57,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>User List</h1>
+        <h1>Usuários:</h1>
         <ul>
             <% users.forEach(user => { %>
                 <li>
                     <%= user.name %> - <%= user.email %>
-                    <form action="/delete/<%= user.email %>" method="post" style="display: inline;">
-                        <button type="submit">Delete</button>
+                    <form action="/excluir/<%= email %>" method="POST">                        <button type="submit">Delete</button>
                     </form>
                 </li>
             <% }); %>
