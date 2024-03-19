@@ -1,5 +1,4 @@
 const path = require('path');
-
 const express = require('express'); 
 const bodyParser = require('body-parser'); 
 const session = require('express-session'); 
@@ -11,14 +10,26 @@ app.set('views', path.join(__dirname, 'views')); // Define o diretório de visua
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Configurando o middleware de sessão
+//cookies
 app.use(session({
-    secret: 'chave-secreta', // Chave secreta para assinar a sessão
+    secret: 'chave-secreta', // garantir que  que os dados não sejam alterados para cliente
     resave: false, // Evita que a sessão seja salva novamente se não houver alterações
     saveUninitialized: true // Salva a sessão mesmo que ela não tenha sido inicializada
 }));
 
-let users = [];
+// Array de usuários
+let users = [
+    { id: 1, email: 'usuario1@example.com', password: 'senha1' },
+    { id: 2, email: 'usuario2@example.com', password: 'senha2' },
+    { id: 3, email: 'usuario3@example.com', password: 'senha3' },
+    { id: 4, email: 'usuario4@example.com', password: 'senha4' } ,
+    { id: 5, email: 'usuario5@example.com', password: 'senha5' },
+    { id: 6, email: 'usuario6@example.com', password: 'senha6' } ,
+    { id: 7, email: 'usuario7@example.com', password: 'senha7' },
+    { id: 8, email: 'usuario8@example.com', password: 'senha8' },
+    { id: 9, email: 'usuario9@example.com', password: 'senha9' },
+    { id: 10, email: 'usuario10@example.com', password: 'senha10' }
+];
 
 // Middleware para verificar autenticação do usuário
 function verificarAutenticacao(req, res, next) {
@@ -46,7 +57,6 @@ app.get('/usuarios', verificarAutenticacao, (req, res) => {
     res.render('usuarios', { users });
 });
 
-// Rota para excluir um usuário (requer autenticação)
 app.post('/excluir/:email', verificarAutenticacao, (req, res) => {
     const email = req.params.email;
     // Encontra o índice do usuário com o email fornecido na lista de usuários
@@ -115,17 +125,13 @@ app.post('/login', (req, res) => {
     }
 });
 
-// Rota para fazer logout
 app.get('/logout', (req, res) => {
-    // Destroi a sessão do usuário
-    req.session.destroy(err => {
-        if (err) {
-            // Se houver um erro ao destruir a sessão, exibe uma mensagem de erro
+    req.session.destroy(err => { //destroi a sessão do usuário, incluindo o cookies
+        if (err) { // se ocorrer erro, aparece a mensagem:
             console.error('Erro ao fazer logout:', err);
             res.send('Erro ao fazer logout');
         } else {
-            // Caso contrário, redireciona para a página de login
-            res.redirect('/');
+            res.redirect('/'); // caso não volta para página de login
         }
     });
 });
