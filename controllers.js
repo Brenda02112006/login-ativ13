@@ -1,39 +1,89 @@
-const booksDB = [
-    { id: 1, title: 'Jesus, o maior psicólogo que já existiu', author: 'Mark W. Baker', year: 2020 },
-    { id: 2, title: 'A travessia', author: 'William P. Youg', year: 2012 },
-    { id: 3, title: 'O diário de Anne Frank', author: 'Anne Frank', year: 1950 },
-    { id: 4, title: 'o velho e o mar', author: 'Ernest Hemingway', year: 1950 },
-    { id: 5, title: 'O Senhor dos Anéis', author: 'J.R.R. Tolkien', year: 1954 },
-    { id: 6, title: 'Harry Potter e a Pedra Filosofal', author: 'J.K. Rowling', year: 1997 },
-    { id: 7, title: '1984', author: 'George Orwell', year: 1949 },
-    { id: 8, title: 'Dom Quixote', author: 'Miguel de Cervantes', year: 1605 },
-    { id: 9, title: 'Cem anos de Solidão', author: 'Gabriel García Márquez', year: 1967 },
-    { id: 10, title: 'A Revolução dos Bichos', author: 'George Orwell', year: 1945 }
-  ];
-  
-  function renderHomePage(req, res) {
-    res.render('index', { books: booksDB });
-  }
-  
-  function searchBooks(req, res) {
-    const { title, year } = req.query;
-    let results = [];
-  
-    if (title) {
-      results = booksDB.filter(book => book.title && book.title.toLowerCase().includes(title.toLowerCase()));
-    } else if (year) {
-      results = booksDB.filter(book => book.year === parseInt(year));
+const bcrypt = require('bcrypt');
+
+// Array vazio para armazenar os usuários
+let users = [];
+
+module.exports = {
+    renderProfile: (req, res) => {
+        const { email } = req.params;
+        res.render('perfil', { email, users });
+    },
+    renderUsers: (req, res) => {
+        res.render('usuarios', { users });
+    },
+    deleteUser: (req, res) => {
+        const email = req.params.email;
+        const index = users.findIndex(user => user.email === email);
+        if (index !== -1) {
+            users.splice(index, 1);
+        }
+        res.redirect('/usuarios');
+    },
+    renderRegister: (req, res) => {
+        res.render('registro', { errorMessage: '' });
+    },
+    registerUser: (req, res) => {
+        const { name, email, password, confirmPassword } = req.body;
+
+        // Verifica se as senhas coincidem
+        if (password !== confirmPassword) {
+            return res.render('registro', { errorMessage: 'As senhas não coincidem' });
+        }
+
+        // Verifica se o email já está cadastrado
+        const existingUser = users.find(user => user.email === email);
+        if (existingUser) {
+            return res.render('registro', { errorMessage: 'Este email já está cadastrado' });
+        }
+
+        // Hash da senha antes de salvar no banco de dados
+        bcrypt.hash(password, 10, (err, hashedPassword) => {
+            if (err) {
+                console.error('Erro ao criar hash da senha:', err);
+                return res.render('registro', { errorMessage: 'Erro ao registrar o usuário' });
+            }
+
+            // Cria um novo usuário com a senha criptografada
+            const newUser = { name, email, password: hashedPassword };
+            // Adiciona o novo usuário à lista de usuários
+            users.push(newUser);
+            // Define o usuário na sessão
+            req.session.usuario = newUser;
+            // Redireciona para a página de perfil do usuário
+            res.redirect(`/perfil/${newUser.email}`);
+        });
+    },
+    renderLogin: (req, res) => {
+        res.render('index', { errorMessage: '' });
+    },
+    loginUser: (req, res) => {
+        const { email, password } = req.body;
+        const user = users.find(user => user.email === email);
+        if (!user) {
+            return res.render('index', { errorMessage: 'Email ou senha incorretos' });
+        }
+
+        bcrypt.compare(password, user.password, (err, result) => {
+            if (err) {
+                console.error('Erro ao comparar senhas:', err);
+                return res.render('index', { errorMessage: 'Erro ao fazer login' });
+            }
+            if (result) {
+                req.session.usuario = user;
+                res.redirect(`/perfil/${user.email}`);
+            } else {
+                res.render('index', { errorMessage: 'Email ou senha incorretos' });
+            }
+        });
+    },
+    logoutUser: (req, res) => {
+        req.session.destroy(err => {
+            if (err) {
+                console.error('Erro ao fazer logout:', err);
+                res.send('Erro ao fazer logout');
+            } else {
+                res.redirect('/');
+            }
+        });
     }
-  
-    if (results.length === 0) {
-      res.render('index', { books: [], mensagem: 'Nenhum livro encontrado para a busca realizada.' });
-    } else {
-      res.render('index', { books: results });
-    }
-  }
-  
-  module.exports = {
-    renderHomePage,
-    searchBooks
-  };
-  
+};
