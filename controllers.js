@@ -1,11 +1,11 @@
 //exporta as funções
-
 const bcrypt = require('bcrypt');
 
 // Array vazio para armazenar os usuários
 let users = [];
 
-module.exports = {
+// Funções relacionadas aos usuários
+const userController = {
     renderProfile: (req, res) => { //rederiza o perfil de um usuário
         const { email } = req.params; //extrai o email
         res.render('perfil', { email, users });
@@ -87,5 +87,16 @@ module.exports = {
                 res.redirect('/');
             }
         });
+    },
+
+    // Middleware para verificar autenticação
+    verificarAutenticacao: (req, res, next) => {
+        if (req.session.usuario) {
+            next();
+        } else {
+            res.redirect('/');
+        }
     }
 };
+
+module.exports = userController;
