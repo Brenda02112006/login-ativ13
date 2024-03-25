@@ -10,7 +10,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
-    secret: 'chave-secreta',
+    secret: 'chave-secreta', //para acessar os cookies de sessão
     resave: false,
     saveUninitialized: true
 }));
