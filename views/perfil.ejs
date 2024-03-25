@@ -62,7 +62,8 @@
             <% users.forEach(user => { %>
                 <li>
                     <%= user.name %> - <%= user.email %>
-                    <form action="/excluir/<%= email %>" method="POST">                        <button type="submit">Delete</button>
+                    <form action="/excluir/<%= email %>" method="POST">                      
+                <button type="submit">Delete</button>
                     </form>
                 </li>
             <% }); %>
