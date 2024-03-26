@@ -1,6 +1,3 @@
-// Exporta as funções
-const bcrypt = require('bcrypt');
-
 // Array vazio para armazenar os usuários
 let users = [];
 
